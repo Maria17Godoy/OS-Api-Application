@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import local.godoy.OSApiApplication.domain.model.Cliente;
 import local.godoy.OSApiApplication.domain.repository.ClienteRepository;
+import local.godoy.OSApiApplication.domain.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,9 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
     
+    @Autowired
+    private ClienteService clienteService;
+    
     @GetMapping("/clientes")
     public List<Cliente> listas(){
               
@@ -48,7 +52,7 @@ public class ClienteController {
         }
 
         cliente.setId(clienteID);
-        cliente = clienteRepository.save(cliente);
+        cliente = clienteService.salvar(cliente);
             return ResponseEntity.ok(cliente);
         }
         
@@ -56,7 +60,7 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
         
-        return clienteRepository.save(cliente);
+        return clienteService.salvar(cliente);
     }
     
     @DeleteMapping("/clientes/{clienteID}") 
@@ -66,7 +70,7 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
         
-        clienteRepository.deleteById(clienteID);
+        clienteService.excluir(clienteID);
         return ResponseEntity.noContent().build();
     }
 }
